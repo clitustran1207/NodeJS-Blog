@@ -9,6 +9,7 @@
   "author": "summerlearntocode",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "config": "^1.30.0",
     "ejs": "^2.6.1",

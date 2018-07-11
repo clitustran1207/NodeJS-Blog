@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Users = require('../models/users');
+var Helpers = require('../helpers/helper');
 
 router.get('/', (req, res) => {
     res.json({
@@ -30,9 +31,10 @@ router.post('/signup', (req, res) => {
             error: 'Password is not match'
         }});
     }
+
     user = {
         email: user.email,
-        password: user.password
+        password: Helpers.hashPassword(user.password) 
     };
     var result = Users.addUser(user);
     result.then(() => {
