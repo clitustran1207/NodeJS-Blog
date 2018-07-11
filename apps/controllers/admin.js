@@ -35,15 +35,16 @@ router.post('/signup', (req, res) => {
         password: user.password
     };
     var result = Users.addUser(user);
-    if(!result){
-        res.render('signup', { data: {
-            error: 'Could not insert user to DB'
-        }});
-    } else {
+    result.then(() => {
         res.json({
             message: 'Insert successfully'
         });
-    }
+    })
+    .catch(() => {
+        res.render('signup', { data: {
+            error: 'Could not insert user to DB'
+        }});
+    });
 })
 
 module.exports = router;

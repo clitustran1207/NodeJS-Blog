@@ -19,10 +19,6 @@ function getConnection(){
     });
     return connection;
 }
-// function getConnection(){
-//     if(!connection) connection.connect();
-//     return connection;
-// }
 module.exports = {
     getConnection: getConnection
 }
