@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <%- include layout/head%>
+    </head>
+    <body>
+        
+        <%- include layout/navbar%>
+
+            <div class="row" style="margin:10px">
+                <div class="col-md-12">
+                    <a href="/admin/add-post" class="btn btn-success float-right">Add new Post</a>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Created Time</th>
+                        <th>Updated Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% if(data.posts) { %>
+                    <% for(var i = 0; i < data.posts.length; i++) { %>
+                    <tr>
+                        <th><%= data.posts[i].id %></th>
+                        <th><%= data.posts[i].title %></th>
+                        <th><%= data.posts[i].author %></th>
+                        <th><%= data.posts[i].created_at %></th>
+                        <th><%= data.posts[i].updated_at %></th>
+                        <th>
+                            <a href="" class="btn btn-primary">Edit</a>
+                            <a href="" class="btn btn-danger">Delete</a>
+                        </th>
+                    </tr>
+                    <% } %>
+                <% } %>
+                </tbody>
+            </table>
+            
+        <%- include layout/jscript%>
+    </body>
+</html>

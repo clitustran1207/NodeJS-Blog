@@ -1,20 +1,19 @@
-var q = require('q');
 var db = require('../common/database');
 
 var conn = db.getConnection();
 
-function addUser(user){
+function getAllPost(){
     return new Promise((resolve, reject) => {
-        conn.query('INSERT INTO users SET ?', user, (err, result) => {
+        conn.query('SELECT * FROM posts', (err, result) => {
             if(err) reject(err);
             else resolve(result);
         });
     });
 }
 
-function getUser(email){
+function addPost(post){
     return new Promise((resolve, reject) => {
-        conn.query('SELECT * FROM users WHERE ?', {email: email}, (err, result) => {
+        conn.query('INSERT INTO posts SET ?', post, (err, result) => {
             if(err) reject(err);
             else resolve(result);
         });
@@ -22,6 +21,6 @@ function getUser(email){
 }
 
 module.exports = {
-    addUser: addUser,
-    getUser: getUser
+    getAllPost: getAllPost,
+    addPost: addPost
 }
