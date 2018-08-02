@@ -20,7 +20,36 @@ function addPost(post){
     });
 }
 
+function getPostById(id){
+    return new Promise((resolve, reject) => {
+        conn.query('SELECT * FROM posts WHERE ?', { id: id}, (err, result) => {
+            if(err) reject(err);
+            else resolve(result);
+        });
+    });
+}
+function updatePost(new_post){
+    return new Promise((resolve, reject) => {
+        conn.query('UPDATE posts SET title = ?, author = ?, content = ?, updated_at = ? WHERE id = ?', 
+                    [new_post.title, new_post.author, new_post.content, new Date(), new_post.id], (err, result) => {
+                        if(err) reject(err);
+                        else resolve(result);
+                    });
+    });
+}
+function deletePost(id){
+    return new Promise((resolve, reject) => {
+        conn.query('DELETE FROM posts WHERE ?', { id: id }, (err, result) => {
+            if(err) reject(err);
+            else resolve(result);
+        });
+    });
+}
+
 module.exports = {
     getAllPost: getAllPost,
-    addPost: addPost
+    addPost: addPost,
+    getPostById: getPostById,
+    updatePost: updatePost,
+    deletePost: deletePost
 }

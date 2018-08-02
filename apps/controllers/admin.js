@@ -19,39 +19,6 @@ router.get('/', (req, res) => {
     });    
 });
 
-router.get('/add-post', (req,res) => {
-    res.render('admin/post/new', { data: {}});
-});
-router.post('/add-post', (req, res) => {
-    var post = req.body;
-    //console.log(post);
-    if(!post.title || post.title.trim().length == 0){
-        res.render('admin/post/new', { data: {
-            error: 'Title is required.'
-        }});
-    }
-    else if(!post.author || post.author.trim().length == 0){
-        res.render('admin/post/new', { data: {
-            error: 'Author is required.'
-        }});
-    }
-    else if(!post.content || post.content.trim().length == 0){
-        res.render('admin/post/new', { data: {
-            error: 'Content is required.'
-        }});
-    }
-    else {
-        var result = Posts.addPost(post);
-        result.then(() => {
-            res.redirect('/admin');
-        })
-        .catch(() => {
-            res.render('new', { data: {
-                error: 'Could not insert post to DB.'
-            }});
-        });
-    }
-});
 router.get('/signup', (req, res) => {
     res.render('signup', { data: {}});
 });
@@ -122,6 +89,84 @@ router.post('/login', (req, res) => {
                 error: 'User is not exist.'
             }});
         }
+    }
+});
+
+router.get('/add-post', (req,res) => {
+    res.render('admin/post/new', { data: {}});
+});
+router.post('/add-post', (req, res) => {
+    var post = req.body;
+    //console.log(post);
+    if(!post.title || post.title.trim().length == 0){
+        res.render('admin/post/new', { data: {
+            error: 'Title is required.'
+        }});
+    }
+    else if(!post.author || post.author.trim().length == 0){
+        res.render('admin/post/new', { data: {
+            error: 'Author is required.'
+        }});
+    }
+    else if(!post.content || post.content.trim().length == 0){
+        res.render('admin/post/new', { data: {
+            error: 'Content is required.'
+        }});
+    }
+    else {
+        var result = Posts.addPost(post);
+        result.then(() => {
+            res.redirect('/admin');
+        })
+        .catch(() => {
+            res.render('new', { data: {
+                error: 'Could not insert post to DB.'
+            }});
+        });
+    }
+});
+router.get('/edit-post/:id', (req, res) => {
+    var id = req.params.id;
+
+    var result = Posts.getPostById(id);
+    result.then((posts) => {
+        var post = posts[0];
+        res.render('admin/post/edit', { data: {
+            post: post 
+        }});
+    })
+    .catch(() => {
+        res.render('admin/dashboard', { data: {
+            error: 'Could not edit this post.'
+        }});
+    });
+});
+router.put('/edit-post', (req, res) => {
+    var new_post = req.body;
+    var result = Posts.updatePost(new_post);
+    if(result){
+        result.then(() => {
+            res.json({ status_code: 200 });
+        })
+        .catch(() => {
+            res.json({ status_code: 500 });
+        });
+    } else {
+        res.json({ status_code: 500 });
+    }
+});
+router.delete('/delete-post', (req, res) => {
+    var post_id = req.body.id;
+    var result = Posts.deletePost(post_id);
+    if(result){
+        result.then(() => {
+            res.json({ status_code: 200 });
+        })
+        .catch(() => {
+            res.json({ status_code: 500 });
+        });
+    } else {
+        res.json({ status_code: 500 });
     }
 });
 

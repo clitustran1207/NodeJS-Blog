@@ -9,23 +9,24 @@
         
         <div class="container">
             <div class="col-md-6">
-                <form action="/admin/add-post" method="POST">
+                <form action="" method="">
                     <div style="<%if(!data || !data.error) { %> display:none; <% } %>" class="alert alert-danger">
                         <p><%= data.error %></p>            
                     </div>
+                    <input type="hidden" name="id" id="id" value="<%= data.post.id%>">
                     <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" name="title" id="title" placeholder="Enter title" autofocus>
+                        <input type="text" class="form-control" name="title" id="title" placeholder="Enter title" value="<%= data.post.title %>">
                     </div>
                     <div class="form-group">
                         <label for="author">Author</label>
-                        <input type="text" class="form-control" name="author" id="title" placeholder="Enter author">
+                        <input type="text" class="form-control" name="author" id="author" placeholder="Enter author" value="<%= data.post.author %>">
                     </div>
                     <div class="form-group">
                         <label for="content">Content</label>
-                        <textarea class="form-control" rows="10" name="content" id="content"></textarea>
+                        <textarea class="form-control" rows="10" name="content" id="content"><%= data.post.content %></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button class="btn btn-primary edit-post">Edit</button>
                     <a class="btn btn-secondary" href="/admin" role="button">Cancel</a>
                 </form>
             </div>
@@ -33,5 +34,6 @@
         <%- include ../layout/jscript%>
         <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
         <script>tinymce.init({ selector:'textarea' });</script>
+        <script src="../../js/post.js"></script>
     </body>
 </html>
