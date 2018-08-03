@@ -20,8 +20,16 @@ function getUser(email){
         });
     });
 }
-
+function getAllUser(){
+    return new Promise((resolve, reject) => {
+        conn.query('SELECT * FROM users', (err, result) => {
+            if(err) reject(err);
+            else resolve(result);
+        });
+    });
+}
 module.exports = {
     addUser: addUser,
-    getUser: getUser
+    getUser: getUser,
+    getAllUser: getAllUser
 }

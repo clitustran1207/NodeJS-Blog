@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <%- include ../layout/head%>
+    </head>
+    <body>
+        
+        <%- include ../layout/navbar%>
+
+            <div class="row" style="margin:10px">
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Created Time</th>
+                        <th>Updated Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% if(data.users) { %>
+                    <% for(var i = 0; i < data.users.length; i++) { %>
+                    <tr>
+                        <th><%= data.users[i].id %></th>
+                        <th><%= data.users[i].email %></th>
+                        <th><%= data.users[i].created_at %></th>
+                        <th><%= data.users[i].updated_at %></th>
+                        <th>
+                            <a href="/admin/edit-user/<%= data.users[i].id %>" class="btn btn-primary">Edit</a>
+                            <button class="btn btn-danger delete-post" data_id="<%= data.users[i].id %>">Delete</button>
+                        </th>
+                    </tr>
+                    <% } %>
+                <% } %>
+                </tbody>
+            </table>
+            
+        <%- include ../layout/jscript%>
+        <script src="/static/js/post.js"></script>
+    </body>
+</html>

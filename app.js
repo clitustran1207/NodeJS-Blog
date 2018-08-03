@@ -2,6 +2,7 @@ const express = require('express');
 const config = require('config');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const socketio = require('socket.io');
 
 //Setup Express
 const app = express();
@@ -11,7 +12,7 @@ app.use(session({
   secret: config.get('secret-key'),
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
+  cookie: { secure: false }
 }));
 
 //Setup Body Parser
@@ -23,7 +24,7 @@ app.set('views', __dirname + '/apps/views');
 app.set('view engine', 'ejs');
 
 //Static folder (express.static(root, [options]))
-app.use(express.static(__dirname + '/public'));
+app.use('/public', express.static(__dirname + '/public'));
 
 //Setup Controller
 app.use(require(__dirname +  '/apps/controllers'));
@@ -31,4 +32,8 @@ app.use(require(__dirname +  '/apps/controllers'));
 //Config for server
 const host = config.get('server.host');
 const port = config.get('server.port');
-app.listen(port, host, () => console.log('Server is running on port', port));
+const server = app.listen(port, host, () => console.log('Server is running on port', port));
+
+const io = socketio(server);
+
+const socketControl = require('./apps/common/socketcontrol')(io);

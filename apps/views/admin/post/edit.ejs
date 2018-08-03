@@ -16,24 +16,24 @@
                     <input type="hidden" name="id" id="id" value="<%= data.post.id%>">
                     <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" name="title" id="title" placeholder="Enter title" value="<%= data.post.title %>">
+                        <input type="text" class="form-control" name="title" id="title" placeholder="Enter title" value="<%- data.post.title %>">
                     </div>
                     <div class="form-group">
                         <label for="author">Author</label>
-                        <input type="text" class="form-control" name="author" id="author" placeholder="Enter author" value="<%= data.post.author %>">
+                        <input type="text" class="form-control" name="author" id="author" placeholder="Enter author" value="<%- data.post.author %>">
                     </div>
                     <div class="form-group">
                         <label for="content">Content</label>
-                        <textarea class="form-control" rows="10" name="content" id="content"><%= data.post.content %></textarea>
+                        <textarea class="form-control" rows="10" name="content" id="content"><%- data.post.content %></textarea>
                     </div>
                     <button class="btn btn-primary edit-post">Edit</button>
-                    <a class="btn btn-secondary" href="/admin" role="button">Cancel</a>
+                    <a class="btn btn-secondary" href="/admin/posts" role="button">Cancel</a>
                 </form>
             </div>
         </div>
         <%- include ../layout/jscript%>
         <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
         <script>tinymce.init({ selector:'textarea' });</script>
-        <script src="../../js/post.js"></script>
+        <script src="/public/js/post.js"></script>
     </body>
 </html>

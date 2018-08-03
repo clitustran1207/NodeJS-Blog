@@ -5,20 +5,6 @@ var Users = require('../models/users');
 var Posts = require('../models/posts');
 var Helpers = require('../helpers/helper');
 
-router.get('/', (req, res) => {
-    var data = Posts.getAllPost();
-    data.then((posts) => {
-        res.render('admin/dashboard', { data: {
-            posts: posts, 
-            error: false
-        }});
-    }).catch((error) => {
-        res.render('admin/dashboard', { data: {
-            error: "Have error when getting all Posts"
-        }});
-    });    
-});
-
 router.get('/signup', (req, res) => {
     res.render('signup', { data: {}});
 });
@@ -70,13 +56,15 @@ router.post('/login', (req, res) => {
         if(data){
             data.then((users) => {
                 var user = users[0];
-                console.log(user);
-                console.log(users);
+                //console.log(user);
+                //console.log(users);
                 var status = Helpers.comparePassword(params.password, user.password);
                 if(status){
                     req.session.user = user;
                     //console.log(req.session.user);
-                    res.redirect('/admin');
+                    res.render('admin/post/dashboard', { data: {
+                        name: req.session.user.email
+                    }});
                 } else {
                     res.render('login', { data: {
                         error: 'Wrong Password.'
@@ -91,9 +79,31 @@ router.post('/login', (req, res) => {
         }
     }
 });
-
+router.get('/posts', (req, res) => {
+    if(req.session.user){
+        var data = Posts.getAllPost();
+        data.then((posts) => {
+            res.render('admin/post/dashboard', { data: {
+                posts: posts, 
+                error: false
+            }});
+        }).catch((error) => {
+            res.render('admin/post/dashboard', { data: {
+                error: "Have error when getting all Posts"
+            }});
+        });    
+    } else {
+        res.redirect("/admin/login");
+    }
+    
+});
 router.get('/add-post', (req,res) => {
-    res.render('admin/post/new', { data: {}});
+    if(req.session.user){
+        res.render('admin/post/new', { data: {}});
+    } else {
+        res.redirect('/admin/login');
+    }
+    
 });
 router.post('/add-post', (req, res) => {
     var post = req.body;
@@ -116,7 +126,7 @@ router.post('/add-post', (req, res) => {
     else {
         var result = Posts.addPost(post);
         result.then(() => {
-            res.redirect('/admin');
+            res.redirect('/admin/posts');
         })
         .catch(() => {
             res.render('new', { data: {
@@ -126,20 +136,23 @@ router.post('/add-post', (req, res) => {
     }
 });
 router.get('/edit-post/:id', (req, res) => {
-    var id = req.params.id;
-
-    var result = Posts.getPostById(id);
-    result.then((posts) => {
-        var post = posts[0];
-        res.render('admin/post/edit', { data: {
-            post: post 
-        }});
-    })
-    .catch(() => {
-        res.render('admin/dashboard', { data: {
-            error: 'Could not edit this post.'
-        }});
-    });
+    if(req.session.user){
+        var id = req.params.id;
+        var result = Posts.getPostById(id);
+        result.then((posts) => {
+            var post = posts[0];
+            res.render('admin/post/edit', { data: {
+                post: post 
+            }});
+        })
+        .catch(() => {
+            res.render('admin/dashboard', { data: {
+                error: 'Could not edit this post.'
+            }});
+        });
+    } else {
+        res.redirect('/admin/login');
+    }
 });
 router.put('/edit-post', (req, res) => {
     var new_post = req.body;
@@ -167,6 +180,22 @@ router.delete('/delete-post', (req, res) => {
         });
     } else {
         res.json({ status_code: 500 });
+    }
+});
+router.get('/users', (req, res) => {
+    if(req.session.user){
+        var data = Users.getAllUser();
+        data.then((users) => {
+            res.render('admin/user/list', { data: {
+                users: users
+            }});
+        }).catch(() => {
+            res.render('admin/user/list', { data: {
+                error: "Have error when getting all Users"
+            }});
+        });
+    } else {
+        res.redirect('/admin/login');
     }
 });
 
