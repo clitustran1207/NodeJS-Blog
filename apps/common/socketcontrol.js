@@ -25,5 +25,36 @@ module.exports = (io) => {
 
             socket.broadcast.emit('updateMessage', data);
         });
+        socket.on('sendMessage', (message) => {
+            var obj = {
+                sender: 'You',
+                message: message,
+                position: 'pull-right',
+                au: 'admin_chat'
+            };
+            socket.emit('renderMessage', obj);
+
+            var obj = {
+                sender: socket.username,
+                message: message,
+                position: 'pull-left',
+                au: ''
+            };
+            socket.broadcast.emit('renderMessage', obj);
+        });
+
+        socket.on('disconnect', () => {
+            for(var i = 0; i < usernames.length; i++) {
+                if(usernames[i] == socket.username)
+                    usernames.splice(i, 1);
+            }
+
+            var data = {
+                sender: 'SERVER',
+                message: socket.username + ' left the chat room'
+            };
+
+            socket.broadcast.emit('updateMessage', data);
+        });
     });
 }

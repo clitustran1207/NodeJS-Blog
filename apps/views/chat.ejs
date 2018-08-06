@@ -25,19 +25,6 @@
                             <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-weixin" aria-hidden="true"></i> All Conversations
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <li><a href="#">All Conversation</a>  
-                                    <ul class="sub_menu_ list-unstyled">
-                                        <li><a href="#"> All Conversation </a> </li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
-                                        <li><a href="#">Separated link</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
                         </div>
                         <div class="member_list">
                             <ul class="list-unstyled notification">
@@ -72,36 +59,20 @@
                         <!--new_message_head-->
 		 
                         <div class="chat_area">
-                            <ul class="list-unstyled">
-                                <li class="left clearfix">
-                                    <span class="chat-img1 pull-left">
-                                    <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
-                                    </span>
-                                    <div class="chat-body1 clearfix">
-                                        <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
-                                        <div class="chat_time pull-right">09:40PM</div>
-                                    </div>
-                                </li>
-                                <li class="left clearfix admin_chat">
-                                    <span class="chat-img1 pull-right">
-                                    <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
-                                    </span>
-                                    <div class="chat-body1 clearfix">
-                                        <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
-                                        <div class="chat_time pull-left">09:40PM</div>
-                                    </div>
-                                </li>
+                            <ul class="list-unstyled chat-area">
                             </ul>
                         </div>
                         <!--chat_area-->
 
                         <div class="message_write">
-    	                    <textarea class="form-control" placeholder="type a message"></textarea>
+                        <form>
+                            <input class="form-control message" type="text" name="message" />
 		                    <div class="clearfix"></div>
 		                    <div class="chat_bottom">
-                                <a href="#" class="pull-left upload_btn"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Add Files</a>
-                                <a href="#" class="pull-right btn btn-success">Send</a>
+                                <a href="" class="pull-left upload_btn"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Add Files</a>
+                                <button class="pull-right btn btn-success btn-send">Send</button>
                             </div>
+                        </form>
 		                </div>
 		            </div>
                 </div>
@@ -125,6 +96,28 @@
             //Listen updateMessage event
             socket.on('updateMessage', (data) => {
                 $('.notification').append('<li><b>' + data.sender + ': </b>' + data.message + '</li>');
+            });
+
+            //Send messages
+            $('.btn-send').click(() => {
+                const message = $('.message').val();
+                $('.message').val('');
+                if(message.trim().length != 0)
+                    socket.emit('sendMessage', message);
+            });
+
+            socket.on('renderMessage', (data) => {
+                const html = '<li class="left clearfix ' + data.au + '"><span class="chat-img1 ' + data.position + '"><img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle"></span><div class="chat-body1 clearfix"><p class="' + data.position + '">' + data.message + '</p></div></li>';
+                // html = $.parseHTML(html);
+                $('.chat-area').append(html);
+            });
+
+            $('form').submit(() => {
+                return false;
+            });
+            $('.message').keypress((e) => {
+                if(e.which == 13)
+                    $('.btn-send').trigger('click');
             });
         </script>
     </body>
